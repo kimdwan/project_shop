@@ -1,0 +1,6 @@
+backend/backend_nestjs/dist
+backend/backend_nestjs/node_modules
+backend/backend_nestjs/prisma/migrations
+backend/backend_nestjs/.env
+
+
