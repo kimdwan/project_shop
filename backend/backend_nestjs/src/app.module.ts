@@ -1,13 +1,14 @@
 import { MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TestModule } from './test/test.module';
-import { UserModule } from './service';
+import { UserModule, AuthUserModule } from './service';
 import { AuthModule } from './auth/auth.module';
 import * as CookieParser from "cookie-parser"
 import { JwtModule, JwtService } from '@nestjs/jwt';
-import { MiddlewareLogin } from './middlewares';
+import { MiddlewareAuthBlacklist, MiddlewareAuthUser, MiddlewareLogin } from './middlewares';
 import { PrismaService } from './auth/prisma';
 import { RedisService } from './auth/redis';
+import { ContactModule } from './service/contact/contact.module';
 
 @Module({
   imports: [
@@ -25,6 +26,8 @@ import { RedisService } from './auth/redis';
     TestModule,
     UserModule,
     AuthModule,
+    AuthUserModule,
+    ContactModule,
     
   ],
   providers: [
@@ -43,5 +46,15 @@ export class AppModule implements NestModule{
     consumer
     .apply(MiddlewareLogin)
     .forRoutes({ path:"/user/login/",method:RequestMethod.POST })
+
+    consumer
+    .apply(MiddlewareAuthBlacklist)
+    .forRoutes({ path:"/auth/*/",method:RequestMethod.ALL })
+
+    consumer
+    .apply(MiddlewareAuthUser)
+    .forRoutes({ path:"/auth/*/",method:RequestMethod.ALL })
+
+
   }
 }

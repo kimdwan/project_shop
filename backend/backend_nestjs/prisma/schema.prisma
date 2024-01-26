@@ -22,7 +22,7 @@ model User {
   age Int?
   job Jobs?
   salary Int?
-  phone String?
+  phone String? @db.VarChar(30)
 
   creatAt DateTime @default(now())
   updateAt DateTime @updatedAt
@@ -57,4 +57,17 @@ model AuthToken {
   updateAt DateTime @updatedAt
 
   @@map("authtokens")
+}
+
+model Contact {
+  id Int @id @default(autoincrement())
+  first_name String? @db.VarChar(50)
+  last_name String? @db.VarChar(50)
+  email String 
+  messages String
+
+  createAt DateTime @default(now())
+  updateAt DateTime @updatedAt
+
+  @@map("contacts")
 }
